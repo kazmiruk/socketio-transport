@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="js/socket.io.js"></script>
+    <script>
+        WEB_SOCKET_SWF_LOCATION = "WebSocketMain.swf";
+        WEB_SOCKET_DEBUG = true;
+
+        var callback = function(data) {
+            console.log(data);
+        }
+
+        var socket = io.connect('http://localhost:9876/notify');
+        socket.on('connect', function(data) {
+            socket.emit('login', 'k0j4tnm62uu0nz2gpgptqs64dp0u3rp9', callback);
+        })
+
+        socket.on("new_message", callback);
+        socket.on("update", callback);
+  </script>
+  </head>
+<body>
+</body>
+</html>

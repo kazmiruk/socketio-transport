@@ -51,7 +51,6 @@ GEARMAN = {
     'waiting_timeout': 5
 }
 
-GEARMAN_RETRY_TIMEOUT = 5
 GEARMAN_RECONNECT_TIMEOUT = 10
 
 DEBUG = False

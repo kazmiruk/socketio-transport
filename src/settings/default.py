@@ -48,7 +48,7 @@ MAX_REDIS_CONNECTIONS = 5
 
 GEARMAN = {
     'hosts': ['localhost:4730', 'localhost:4731'],
-    'waiting_timeout': 5
+    'waiting_timeout': 10
 }
 
 GEARMAN_RECONNECT_TIMEOUT = 10

@@ -38,6 +38,9 @@ class BaseNamespace(ParentNamespace, RoomsMixin, BroadcastMixin):
         logging.debug("MSG: {}".format(message))
 
     def on_login(self, user_id, hash_key):
+        if not isinstance(user_id, long):
+            user_id = long(user_id)
+
         if user_id and hash_key == self.__check_hash(user_id):
             self.user_id = user_id
             logging.debug("User {user_id} session confirmed".format(user_id=user_id))

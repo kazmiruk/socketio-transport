@@ -12,7 +12,7 @@
 
         var socket = io.connect('http://localhost:9876/notify');
         socket.on('connect', function(data) {
-            socket.emit('login', 'k0j4tnm62uu0nz2gpgptqs64dp0u3rp9', callback);
+            socket.emit('login', '64987353562742787', '73d962da3153a88309a3ff141d7675dd61daa4a2a5058ee0d5ae36fa28d28078', callback);
         })
 
         socket.on("new_message", callback);

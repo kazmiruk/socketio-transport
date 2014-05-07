@@ -92,6 +92,6 @@ class GearmanListener(object):
             return gearman_job.data
 
         task = handler(data['data'])
-        task.put(data['user_id'])
+        task.put(data['user_id'], data['site_id'])
 
         return gearman_job.data

@@ -17,7 +17,6 @@ class BaseNamespace(ParentNamespace, RoomsMixin, BroadcastMixin):
         self.user_id = None
         self.site_id = None
         self.queue = None
-        self.queue_name = None
 
     def recv_connect(self):
         logging.debug("New user connected")
@@ -28,12 +27,13 @@ class BaseNamespace(ParentNamespace, RoomsMixin, BroadcastMixin):
         if self.user_id and self.site_id:
             register = Register()
 
-            if self.queue_name and self.queue_name in register.queue and \
-                    self.socket.sessid in register.queue[self.queue_name]:
-                if len(register.queue[self.queue_name]) == 1:
-                    del register.queue[self.queue_name]
+            if self.user_id and self.site_id and self.user_id in register.queue and \
+                    self.site_id in register.queue[self.user_id] and \
+                    self.socket.sessid in register.queue[self.user_id][self.site_id]:
+                if len(register.queue[self.user_id][self.site_id]) == 1:
+                    del register.queue[self.user_id][self.site_id]
                 else:
-                    del register.queue[self.queue_name][self.socket.sessid]
+                    del register.queue[self.user_id][self.site_id][self.socket.sessid]
 
         super(BaseNamespace, self).recv_disconnect()
 
@@ -61,12 +61,13 @@ class BaseNamespace(ParentNamespace, RoomsMixin, BroadcastMixin):
             self.queue = Queue(maxsize=None)
             register = Register()
 
-            self.queue_name = str(user_id) + "_" + str(site_id)
+            if user_id not in register.queue:
+                register.queue[user_id] = {}
 
-            if self.queue_name not in register.queue:
-                register.queue[self.queue_name] = {}
+            if site_id not in register.queue[user_id]:
+                register.queue[user_id][site_id] = {}
 
-            register.queue[self.queue_name][self.socket.sessid] = self.queue
+            register.queue[user_id][site_id][self.socket.sessid] = self.queue
             JobWrapper.start_listen(self._outter_task_loop)
 
             self.emit("login", {"status": True})

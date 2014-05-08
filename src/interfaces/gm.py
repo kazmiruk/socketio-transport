@@ -92,6 +92,28 @@ class GearmanListener(object):
             return gearman_job.data
 
         task = handler(data['data'])
-        task.put(data['user_id'], data['site_id'])
+        delay = data.get('delay', 0.0)
+
+        if delay > 0:
+            JobWrapper.spawn(
+                GearmanListener.delayer,
+                task,
+                data['user_id'],
+                data['site_id'],
+                delay
+            )
+        else:
+            task.put(data['user_id'], data['site_id'])
 
         return gearman_job.data
+
+    @staticmethod
+    def delayer(task, user_id, site_id, delay):
+        logging.debug("Task from user {user_id} and {site_id} will be delayed during {delay} seconds".format(
+            user_id=user_id,
+            site_id=site_id,
+            delay=delay
+        ))
+
+        gevent.sleep(delay)
+        task.put(user_id, site_id)

@@ -1,4 +1,3 @@
-import json
 import logging
 from gevent.queue import Queue
 from hashlib import sha256
@@ -24,16 +23,9 @@ class BaseNamespace(ParentNamespace, RoomsMixin, BroadcastMixin):
     def recv_disconnect(self):
         logging.debug("User disconnected")
 
-        if self.user_id and self.site_id:
-            register = Register()
-
-            if self.user_id and self.site_id and self.user_id in register.queue and \
-                    self.site_id in register.queue[self.user_id] and \
-                    self.socket.sessid in register.queue[self.user_id][self.site_id]:
-                if len(register.queue[self.user_id][self.site_id]) == 1:
-                    del register.queue[self.user_id][self.site_id]
-                else:
-                    del register.queue[self.user_id][self.site_id][self.socket.sessid]
+        if self.queue:
+            #closing infinity loop of queue processor by sending False into it
+            self.queue.put(False)
 
         super(BaseNamespace, self).recv_disconnect()
 
@@ -90,6 +82,13 @@ class BaseNamespace(ParentNamespace, RoomsMixin, BroadcastMixin):
         if task:
             task.do(self)
             return True
+
+        register = Register()
+
+        if len(register.queue[self.user_id][self.site_id]) == 1:
+            del register.queue[self.user_id][self.site_id]
+        else:
+            del register.queue[self.user_id][self.site_id][self.socket.sessid]
 
         logging.debug("Task loop finished for user {user_id} and site {site_id}".format(
             user_id=self.user_id,

@@ -13,6 +13,12 @@ class Strategy(object):
     def put(self, user_id, site_id):
         register = Register()
 
+        if not isinstance(user_id, long):
+            user_id = long(user_id)
+
+        if not isinstance(site_id, long):
+            site_id = long(site_id)
+
         if user_id in register.queue and site_id in register.queue[user_id]:
             user_queues = register.queue[user_id][site_id]
 

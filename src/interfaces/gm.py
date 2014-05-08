@@ -92,7 +92,13 @@ class GearmanListener(object):
             return gearman_job.data
 
         task = handler(data['data'])
-        delay = data.get('delay', 0.0)
+        delay = float(data.get('delay', 0.0))
+
+        logging.debug("Task {user_id}, {site_id}, {delay} obtained".format(
+            user_id=data['user_id'],
+            site_id=data['site_id'],
+            delay=delay
+        ))
 
         if delay > 0:
             JobWrapper.spawn(

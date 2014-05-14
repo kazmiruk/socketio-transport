@@ -1,0 +1,17 @@
+*~
+.#*
+,*
+_$*
+*$
+*.old
+*.bak
+*.BAK
+*.orig
+*.rej
+.del-*
+.svn/
+.git/
+.hg/
+.bzr/
+pkgbuild/
+.gitignore

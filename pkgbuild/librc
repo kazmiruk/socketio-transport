@@ -1,0 +1,22 @@
+#!/bin/sh
+
+EXIT_FAILURE="1"
+EXIT_OK="0"
+
+isnullx() {
+  local key=$1
+  eval value=\$$key
+
+  if [ x"$value" = x ]; then
+    echo "$key is not set"
+    exit $EXIT_FAILURE
+  fi
+}
+
+execute() {
+  local command="$*"
+
+  echo "I: $command"
+
+  $command
+}

@@ -21,5 +21,5 @@ execute virtualenv -q $DESTDIR/env/
   execute cd $DESTDIR/
 
   execute pip install -r requirements/production.txt
-  execute ln -sf /etc/$NAME/local.py src/$NAME/settings/local.py
+  execute ln -sf /etc/$NAME/local.py src/settings/local.py
 }

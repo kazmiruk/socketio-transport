@@ -18,11 +18,9 @@ logging.basicConfig(
 
 try:
     config = settings.SOCKET_IO_SERVER
-    chunk_diff = OPTIONS.chunk - 1
+
     if OPTIONS.port:
         config['listener'][1] = OPTIONS.port
-    else:
-        config['listener'][1] += chunk_diff
 
     listener = (config['listener'][0], config['listener'][1])
     del config['listener']
@@ -35,8 +33,6 @@ try:
     if config['policy_server']:
         if OPTIONS.policy_port:
             config['policy_listener'][1] = OPTIONS.policy_port
-        else:
-            config['policy_listener'][1] += chunk_diff
 
         config['policy_listener'] = (
             config['policy_listener'][0],

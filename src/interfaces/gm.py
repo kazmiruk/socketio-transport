@@ -28,7 +28,7 @@ class GearmanListener(object):
 
             try:
                 gm_worker = GearmanWorker(settings.GEARMAN['hosts'])
-                gm_worker.set_client_id("socket_io_gearman_" + str(OPTIONS.chunk))
+                gm_worker.set_client_id("socket_io_gearman_" + str(OPTIONS.port))
                 gm_worker.register_task("socket_io", GearmanListener.callback)
                 logging.debug("Gearman worker was successfull created")
 

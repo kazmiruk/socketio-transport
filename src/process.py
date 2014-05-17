@@ -1,22 +1,18 @@
 from gevent import monkey; monkey.patch_all()
 import logging
-
-from socketio.server import SocketIOServer
-
+from logging.config import dictConfig
 import settings
-from interfaces.options import OPTIONS
-from interfaces.jobs import JobWrapper
-from interfaces.handler import Handler
-from interfaces.gm import GearmanListener
 
-# configure loggin lib from settings and options
-logging.basicConfig(
-    format=settings.LOGGING['format'],
-    level=settings.LOGGING['level'],
-    filename=OPTIONS.logfile
-)
+dictConfig(settings.LOGGING)
 
 try:
+    from socketio.server import SocketIOServer
+
+    from interfaces.options import OPTIONS
+    from interfaces.jobs import JobWrapper
+    from interfaces.handler import Handler
+    from interfaces.gm import GearmanListener
+
     config = settings.SOCKET_IO_SERVER
 
     if OPTIONS.port:
@@ -52,3 +48,5 @@ try:
 except KeyboardInterrupt, e:
     logging.debug("Demon shutdown")
     JobWrapper.kill_all()
+except Exception, e:
+    logging.error(e)

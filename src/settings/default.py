@@ -1,10 +1,33 @@
 DEBUG = False
 
-import logging
-
 LOGGING = {
-    'format': u'%(asctime)-15s: %(levelname)s: %(filename)s:%(lineno)d: %(message)s',
-    'level': logging.DEBUG
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'console': {
+            'format': u'%(asctime)-15s: %(levelname)s: %(filename)s:%(lineno)d: %(message)s',
+            'datefmt': '%d-%m-%Y %H:%M:%S',
+        }
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'console'
+        },
+        'sentry': {
+            'level': 'ERROR',
+            'class': 'raven.handlers.logging.SentryHandler',
+            'dsn': 'udp://16115f533f784ef2b54b2a258a3464aa:e5fa9694ded64df59da12787162b59df@sentry.dev.pearbox.net:9001/5'
+        }
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console', 'sentry'],
+            'level': 'DEBUG',
+            'propagate': True,
+        }
+    }
 }
 
 SOCKET_IO_SERVER = {
@@ -52,8 +75,6 @@ GEARMAN = {
 }
 
 GEARMAN_RECONNECT_TIMEOUT = 10
-
-DEBUG = False
 
 #Should be similar with django secret key
 SECRET_KEY = 'jknhlppghce65b7#!61^8kzb1hu81q5j8l(3j2d)g2ca*$tt&7'

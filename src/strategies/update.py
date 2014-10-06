@@ -4,8 +4,8 @@ from base import Strategy
 
 
 class Update(Strategy):
-    def do(self, namesapce):
+    def do(self, namespace):
         logging.debug("User {user_id} fired update event".format(
-            user_id=namesapce.user_id
+            user_id=namespace.user_id
         ))
-        namesapce.emit("update", self.data)
+        namespace.emit("update", self.data)

@@ -7,7 +7,7 @@ class Strategy(object):
     def __init__(self, data):
         self.data = data
 
-    def do(self, namesapce):
+    def do(self, namespace):
         pass
 
     def put(self, user_id, site_id):

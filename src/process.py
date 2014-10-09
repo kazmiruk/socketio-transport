@@ -49,6 +49,4 @@ except KeyboardInterrupt, e:
     logging.debug("Demon shutdown")
     JobWrapper.kill_all()
 except Exception, e:
-    #just for logging not handled exceptions
-    logging.error(e)
-    raise e
+    logging.error(e, exc_info=True)

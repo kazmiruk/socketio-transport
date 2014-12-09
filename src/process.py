@@ -21,23 +21,15 @@ try:
     listener = (config['listener'][0], config['listener'][1])
     del config['listener']
 
-    logging.debug('Listening on {host}:{port}'.format(
-        host=listener[0],
-        port=listener[1]
-    ))
+    logging.debug('Listening on {host}:{port}'.format(host=listener[0], port=listener[1]))
 
     if config['policy_server']:
         if OPTIONS.policy_port:
             config['policy_listener'][1] = OPTIONS.policy_port
 
-        config['policy_listener'] = (
-            config['policy_listener'][0],
-            config['policy_listener'][1]
-        )
-        logging.debug('Listening on {host}:{port} (flash policy server)'.format(
-            host=config['policy_listener'][0],
-            port=config['policy_listener'][1]
-        ))
+        config['policy_listener'] = (config['policy_listener'][0], config['policy_listener'][1])
+        logging.debug('Listening on {host}:{port} (flash policy server)'.format(host=config['policy_listener'][0],
+                                                                                port=config['policy_listener'][1]))
     else:
         del config['policy_listener']
 

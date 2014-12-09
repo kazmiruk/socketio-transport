@@ -11,7 +11,7 @@ class Handler(object):
         self.namespaces = None
 
     def __call__(self, environ, start_response):
-        socketio_manage(environ, self.build_namespaces(), Register().request)
+        socketio_manage(environ, self.build_namespaces())
 
     def build_namespaces(self):
         if self.namespaces:
@@ -26,11 +26,7 @@ class Handler(object):
 
             item = getattr(namespace_module, namespace, None)
             if item:
-                namespace_object = getattr(
-                    item,
-                    namespace[0].upper() + namespace[1:] + "Namespace",
-                    None
-                )
+                namespace_object = getattr(item, namespace[0].upper() + namespace[1:] + "Namespace", None)
 
                 if namespace_object:
                     namespaces['/' + namespace] = namespace_object

@@ -42,10 +42,8 @@ class BaseNamespace(ParentNamespace, RoomsMixin, BroadcastMixin):
 
             self.user_id = user_id
             self.site_id = site_id
-            logging.debug("User {user_id} session for site {site_id} confirmed".format(
-                user_id=user_id,
-                site_id=site_id
-            ))
+            logging.debug("User {user_id} session for site {site_id} confirmed".format(user_id=user_id,
+                                                                                       site_id=site_id))
 
             self.socket.session['user_id'] = user_id
             self.socket.session['site_id'] = site_id
@@ -64,18 +62,14 @@ class BaseNamespace(ParentNamespace, RoomsMixin, BroadcastMixin):
 
             self.emit("login", {"status": True})
         else:
-            logging.debug("Can't auth user {user_id} on site {site} and hash {hash}".format(
-                user_id=user_id,
-                site=site_id,
-                hash=hash_key
-            ))
+            logging.debug("Can't auth user {user_id} on site {site} and hash {hash}".format(user_id=user_id,
+                                                                                            site=site_id,
+                                                                                            hash=hash_key))
             self.recv_disconnect()
             self.emit("login", {"status": False})
 
     def __check_hash(self, user_id, site_id):
-        return sha256(
-            str(user_id) + "|" + str(site_id) + "|" + settings.SECRET_KEY
-        ).hexdigest()
+        return sha256(str(user_id) + "|" + str(site_id) + "|" + settings.SECRET_KEY).hexdigest()
 
     def _outter_task_loop(self):
         task = self.queue.get()
@@ -90,8 +84,11 @@ class BaseNamespace(ParentNamespace, RoomsMixin, BroadcastMixin):
         else:
             del register.queue[self.user_id][self.site_id][self.socket.sessid]
 
-        logging.debug("Task loop finished for user {user_id} and site {site_id}".format(
-            user_id=self.user_id,
-            site_id=self.site_id
-        ))
+        if len(register.queue[self.user_id]) == 0:
+            del register.queue[self.user_id]
+
+        self.queue = None
+
+        logging.debug("Task loop finished for user {user_id} and site {site_id}".format(user_id=self.user_id,
+                                                                                        site_id=self.site_id))
         return False

@@ -23,19 +23,12 @@ class Strategy(object):
             user_queues = register.queue[user_id][site_id]
 
             logging.debug("It will add {strategy}, {user_id}, {site_id} task for {count} sockets".format(
-                strategy=self.__class__.__name__,
-                user_id=user_id,
-                site_id=site_id,
-                count=len(user_queues)
-            ))
+                strategy=self.__class__.__name__, user_id=user_id, site_id=site_id, count=len(user_queues)))
 
             self._put_into_queue(user_queues)
         else:
             logging.debug("There are no any users to send them data: {strategy}, {user_id}, {site_id}".format(
-                strategy=self.__class__.__name__,
-                user_id=user_id,
-                site_id=site_id
-            ))
+                strategy=self.__class__.__name__, user_id=user_id, site_id=site_id))
 
     def _put_into_queue(self, user_queues):
         for session_id in user_queues:

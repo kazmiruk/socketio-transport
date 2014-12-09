@@ -36,10 +36,7 @@ class JobWrapper(object):
     def start_listen(cls, callback):
         """ spawn listener in infinite loop
         """
-        cls.spawn(
-            cls._listener,
-            callback
-        )
+        cls.spawn(cls._listener, callback)
 
         logging.debug("New listener was spawned")
 

@@ -9,31 +9,20 @@ import settings
 
 redis.connection.socket = gevent.socket
 
-redis_connection_pool = redis.BlockingConnectionPool(
-    max_connections=settings.MAX_REDIS_CONNECTIONS,
-    timeout=None
-)
+redis_connection_pool = redis.BlockingConnectionPool(max_connections=settings.MAX_REDIS_CONNECTIONS,
+                                                     timeout=None)
 
 if settings.SESSION_REDIS_URL is not None:
-    redis_server = redis.StrictRedis.from_url(
-        settings.SESSION_REDIS_URL,
-        connection_pool=redis_connection_pool
-    )
+    redis_server = redis.StrictRedis.from_url(settings.SESSION_REDIS_URL,
+                                              connection_pool=redis_connection_pool)
 elif settings.SESSION_REDIS_UNIX_DOMAIN_SOCKET_PATH is None:
-    redis_server = redis.StrictRedis(
-        host=settings.SESSION_REDIS_HOST,
-        port=settings.SESSION_REDIS_PORT,
-        db=settings.SESSION_REDIS_DB,
-        password=settings.SESSION_REDIS_PASSWORD,
-        connection_pool=redis_connection_pool
-    )
+    redis_server = redis.StrictRedis(host=settings.SESSION_REDIS_HOST, port=settings.SESSION_REDIS_PORT,
+                                     db=settings.SESSION_REDIS_DB, password=settings.SESSION_REDIS_PASSWORD,
+                                     connection_pool=redis_connection_pool)
 else:
-    redis_server = redis.StrictRedis(
-        unix_socket_path=settings.SESSION_REDIS_UNIX_DOMAIN_SOCKET_PATH,
-        db=settings.SESSION_REDIS_DB,
-        password=settings.SESSION_REDIS_PASSWORD,
-        connection_pool=redis_connection_pool
-    )
+    redis_server = redis.StrictRedis(unix_socket_path=settings.SESSION_REDIS_UNIX_DOMAIN_SOCKET_PATH,
+                                     db=settings.SESSION_REDIS_DB, password=settings.SESSION_REDIS_PASSWORD,
+                                     connection_pool=redis_connection_pool)
 
 
 class SessionStore(object):
@@ -42,9 +31,7 @@ class SessionStore(object):
 
     def load(self, session_key):
         try:
-            session_data = self.server.get(
-                self._get_real_stored_key(session_key)
-            )
+            session_data = self.server.get(self._get_real_stored_key(session_key))
             return self._decode(session_data, settings.SECRET_KEY)
         except:
             return None
@@ -87,8 +74,7 @@ class SessionStore(object):
         expected_utoken = self._get_utoken(pickled, secret_key, class_name)
         if utoken.decode() != expected_utoken:
             raise BaseException('Session data corrupted "%s" != "%s"',
-                                utoken.decode(),
-                                expected_utoken)
+                                utoken.decode(), expected_utoken)
 
         data = json.loads(pickled)
 

@@ -6,10 +6,7 @@ from base import Strategy
 class NewMessage(Strategy):
     def do(self, namespace):
         logging.debug("User {user_id} recive new message {message} in talk {talk_id}".format(
-            user_id=namespace.user_id,
-            message=self.data['message'],
-            talk_id=self.data['talk_id']
-        ))
+            user_id=namespace.user_id, message=self.data['message'], talk_id=self.data['talk_id']))
         namespace.emit_to_room("talk_{id}".format(id=self.data['talk_id']), "new_message", self.data)
         #It needs to manual sending into current socket because of
         #excluding it from emit_to_room user list

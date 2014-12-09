@@ -18,13 +18,11 @@ class GearmanListener(object):
         while True:
             while not self.is_available():
                 logging.error("Gearman not available right now. Demon will sleep during {n} seconds".format(
-                    n=settings.GEARMAN_RECONNECT_TIMEOUT
-                ))
+                    n=settings.GEARMAN_RECONNECT_TIMEOUT))
                 gevent.sleep(settings.GEARMAN_RECONNECT_TIMEOUT)
 
             logging.debug("Gearman worker try to connect {hosts}".format(
-                hosts=', '.join(settings.GEARMAN['hosts'])
-            ))
+                hosts=', '.join(settings.GEARMAN['hosts'])))
 
             try:
                 gm_worker = GearmanWorker(settings.GEARMAN['hosts'])
@@ -35,11 +33,9 @@ class GearmanListener(object):
                 return gm_worker
             except Exception, e:
                 logging.error("Error while initiation gearman worker connect with message: {message}".format(
-                    message=e.message
-                ))
+                    message=e.message))
                 logging.debug("Demon will be sleep during {n} seconds".format(
-                    n=settings.GEARMAN_RECONNECT_TIMEOUT
-                ))
+                    n=settings.GEARMAN_RECONNECT_TIMEOUT))
                 gevent.sleep(settings.GEARMAN_RECONNECT_TIMEOUT)
 
     def _start_work(self, gm_worker):
@@ -51,8 +47,7 @@ class GearmanListener(object):
                 gm_worker.shutdown()
 
                 logging.error("Gearman client was failed with error: {message}".format(
-                    message=e.message
-                ))
+                    message=e.message))
 
             gm_worker = self._init()
 
@@ -78,36 +73,23 @@ class GearmanListener(object):
         data = json.loads(gearman_job.data)
         strategy = data['strategy']
         try:
-            module = import_module("strategies.{path}".format(
-                path=strategy.lower(),
-                name=strategy
-            ))
+            module = import_module("strategies.{path}".format(path=strategy.lower(), name=strategy))
             handler = getattr(module, strategy, None)
             if handler is None:
                 raise ImportError()
         except Exception, e:
-            logging.error("There are no any {strategy} strategy".format(
-                strategy=strategy
-            ))
+            logging.error("There are no any {strategy} strategy".format(strategy=strategy))
             return gearman_job.data
 
         task = handler(data['data'])
         delay = float(data.get('delay', 0.0))
 
-        logging.debug("Task {user_id}, {site_id}, {delay} obtained".format(
-            user_id=data['user_id'],
-            site_id=data['site_id'],
-            delay=delay
-        ))
+        logging.debug("Task {user_id}, {site_id}, {delay} obtained".format(user_id=data['user_id'],
+                                                                           site_id=data['site_id'],
+                                                                           delay=delay))
 
         if delay > 0:
-            JobWrapper.spawn(
-                GearmanListener.delayer,
-                task,
-                data['user_id'],
-                data['site_id'],
-                delay
-            )
+            JobWrapper.spawn(GearmanListener.delayer, task, data['user_id'], data['site_id'], delay)
         else:
             task.put(data['user_id'], data['site_id'])
 
@@ -116,10 +98,7 @@ class GearmanListener(object):
     @staticmethod
     def delayer(task, user_id, site_id, delay):
         logging.debug("Task from user {user_id} and {site_id} will be delayed during {delay} seconds".format(
-            user_id=user_id,
-            site_id=site_id,
-            delay=delay
-        ))
+            user_id=user_id, site_id=site_id, delay=delay))
 
         gevent.sleep(delay)
         task.put(user_id, site_id)

@@ -89,7 +89,8 @@ class GearmanListener(object):
                                                                            delay=delay))
 
         if delay > 0:
-            JobWrapper.spawn(GearmanListener.delayer, task, data['user_id'], data['site_id'], delay)
+            JobWrapper.silent_spawn(GearmanListener.delayer, task, data['user_id'],
+                                    data['site_id'], delay)
         else:
             task.put(data['user_id'], data['site_id'])
 

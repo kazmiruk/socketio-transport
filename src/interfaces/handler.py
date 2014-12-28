@@ -2,12 +2,9 @@ from importlib import import_module
 
 from socketio import socketio_manage
 
-from interfaces.register import Register
-
 
 class Handler(object):
     def __init__(self):
-        self.buffer = []
         self.namespaces = None
 
     def __call__(self, environ, start_response):

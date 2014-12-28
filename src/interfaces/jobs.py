@@ -13,10 +13,17 @@ class JobWrapper(object):
     def spawn(cls, callback, *args, **kwargs):
         """ Spawn new function in green thread
         """
-        job = spawn(callback, *args, **kwargs)
-
-        logging.debug("New job spawned")
+        job = cls.silent_spawn(callback, *args, **kwargs)
         cls._JOBS.append(job)
+        return job
+
+    @classmethod
+    def silent_spawn(cls, callback, *args, **kwargs):
+        """ Spawn new function in green thread
+        """
+        job = spawn(callback, *args, **kwargs)
+        logging.debug("New job spawned")
+        return job
 
     @classmethod
     def join_all(cls):
@@ -36,9 +43,9 @@ class JobWrapper(object):
     def start_listen(cls, callback):
         """ spawn listener in infinite loop
         """
-        cls.spawn(cls._listener, callback)
-
+        job = cls.silent_spawn(cls._listener, callback)
         logging.debug("New listener was spawned")
+        return job
 
     @classmethod
     def _listener(cls, callback):

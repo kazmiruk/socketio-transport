@@ -4,7 +4,7 @@ greenlet==0.4.2
 
 gevent==1.0
 
-https://github.com/kazmiruk/gevent-socketio
+git+https://github.com/kazmiruk/gevent-socketio
 
 redis==2.8.0
 django-redis-sessions==0.4.0
